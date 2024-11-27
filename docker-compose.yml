@@ -1,0 +1,36 @@
+
+networks:
+  symfony_net:
+    driver: bridge
+    name: symfony_net
+
+volumes:
+  symfony-mysql-data:
+
+services:
+  web:
+    networks:
+      - symfony_net
+    build: .
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    networks:
+      - symfony_net
+    environment:
+      - MYSQL_ROOT_PASSWORD=101010
+      - MYSQL_DATABASE=symfony
+      - MYSQL_USER=symfony
+      - MYSQL_PASSWORD=101010
+    ports:
+      - "3306:3306"
+    volumes:
+      - symfony-mysql-data:/var/lib/mysql
+
+
